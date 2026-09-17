@@ -483,9 +483,6 @@ Agent 准备结束任务之前
 
 Agent 修改某类目录
 → 自动运行对应测试
-
-Agent 执行危险命令之前
-→ 拦截或确认
 ```
 
 Agent Hooks 的价值在于：
@@ -593,9 +590,11 @@ Loading
 * 哪些适合 Integration Test
 * 哪些值得做 E2E
 
+这里的前提是有明确的需求和验收标准。否则，AI 只能验证测试是否符合当前实现，无法判断业务行为是否正确。
+
 AI 降低的是测试生产成本，但测试策略仍然需要围绕项目风险设计。
 
-## Independent Review
+## Independent AI Review：独立审查
 
 AI 不仅可以成为 Implementer，也可以成为 Reviewer。
 
@@ -606,10 +605,10 @@ Implement Agent
       ↓
       Diff
       ↓
-Independent Review Agent
+Independent AI Review Agent
 ```
 
-而不是简单让刚刚写完代码的 Agent：
+这里的“独立”至少意味着使用独立的审查任务和上下文，而不是简单让刚刚写完代码的 Agent：
 
 > 再检查一下自己的实现。
 
@@ -662,6 +661,8 @@ Review 的目标不是评价代码“好不好”。
 > **发现能够被验证的问题。**
 
 ## Browser Automation：让 Agent 真正操作页面验证结果
+
+本文把 Agent 启动应用、操作页面、检查 UI、Console 和 Network，并根据结果继续修改代码的过程称为 **Agent Browser Automation**。
 
 前端还有一个非常特殊的问题：
 
@@ -934,7 +935,7 @@ TypeScript / ESLint
         ↓
 Automated Tests
         ↓
-Independent Review
+Independent AI Review
         ↓
 Browser Automation
         ↓
@@ -1004,7 +1005,7 @@ AI Coding 真正增加的，是：
 * `AGENTS.md` / Rules，让 Agent 理解项目
 * Skills，把成熟质量流程固化下来
 * Agent Hooks，让必要检查自动发生
-* Independent Review，引入独立审查
+* Independent AI Review，引入独立审查
 * Agent-driven Test，让 Agent 主动执行验证
 * Browser Automation，让 Agent 可以直接操作页面、观察结果并继续修复
 
@@ -1016,6 +1017,4 @@ AI Coding 真正增加的，是：
 
 > **让 AI 即使犯错，也能够通过工程系统尽可能早、尽可能自动、尽可能低成本地发现和修正。**
 
-AI Coding 提升的是代码生产效率。
-
-而真正决定它能不能稳定进入工程实践的，是与之匹配的**验证能力**。
+AI Coding 提升的是代码生产效率，而真正决定它能不能稳定进入工程实践的，是与之匹配的**验证能力**。

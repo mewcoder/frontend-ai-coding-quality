@@ -316,7 +316,7 @@ AI Coding 之后，需要逐渐把这些隐性知识显式化。
 
 因此 `AGENTS.md`、项目 Rules、目录级 Rules 的价值会越来越高。
 
-Rules 更适合承载三类内容：
+Rules 更适合承载三类内容。
 
 ### 项目结构
 
@@ -661,7 +661,7 @@ Review 的目标不是评价代码“好不好”。
 
 > **发现能够被验证的问题。**
 
-## Browser Verification
+## Browser Automation：让 Agent 真正操作页面验证结果
 
 前端还有一个非常特殊的问题：
 
@@ -687,33 +687,99 @@ Build         ✓
 * Console Error
 * Network 请求异常
 
-因此对于前端 Coding Agent 来说：
+传统前端工程早就有浏览器自动化，比如 Playwright、Cypress 驱动的 E2E。
 
-> **浏览器是非常重要的“眼睛”。**
+AI Coding 之后，浏览器自动化又多了一种新的使用方式。
 
-可以形成：
+### 传统 E2E
+
+传统 E2E 通常是预先编写好的自动化脚本：
 
 ```text
-Agent 修改代码
-      ↓
-启动页面
-      ↓
-打开 Browser
-      ↓
-执行用户流程
-      ↓
-检查 UI
-      ↓
-检查 Console / Network
-      ↓
-截图 / Trace
-      ↓
-发现问题
-      ↓
-修复
-      ↓
-重新验证
+打开页面
+→ 点击按钮
+→ 输入内容
+→ 检查结果
 ```
+
+它的特点是：
+
+> **测试路径预先定义，适合稳定、重复执行的回归验证。**
+
+### Agent Browser Automation
+
+Agent Browser Automation 则更加动态。
+
+Agent 可以根据当前任务，临时决定：
+
+* 打开什么页面
+* 点击哪些按钮
+* 输入什么数据
+* 检查什么状态
+* 查看哪些 Network 请求
+* 是否存在 Console Error
+* 是否需要截图
+* 下一步应该继续验证什么
+
+例如：
+
+```text
+Agent 修改搜索页面
+      ↓
+启动应用
+      ↓
+打开浏览器
+      ↓
+输入关键字
+      ↓
+执行筛选
+      ↓
+检查搜索结果
+      ↓
+模拟接口失败
+      ↓
+检查 Error State
+      ↓
+查看 Console / Network
+      ↓
+截图确认 UI
+```
+
+如果发现问题：
+
+```text
+发现问题
+   ↓
+回到代码
+   ↓
+修复
+   ↓
+重新打开浏览器验证
+```
+
+这和传统 E2E 的定位并不完全相同。
+
+可以简单理解为：
+
+```text
+传统 E2E
+= 预先定义好的稳定回归测试
+
+Agent Browser Automation
+= 根据当前任务动态进行探索式验证
+```
+
+两者并不是互相替代。
+
+更合理的方式是：
+
+> **开发过程中使用 Agent Browser Automation 动态发现问题，稳定且重要的场景再逐渐沉淀为 E2E Regression Test。**
+
+对于前端 Coding Agent 来说，浏览器因此不只是一个测试执行环境。
+
+更像是：
+
+> **Agent 的“眼睛”。**
 
 过去：
 
@@ -721,7 +787,7 @@ Agent 修改代码
 
 AI Coding 时代：
 
-> **Agent 也应该学会自己打开浏览器看。**
+> **Agent 也应该能够自己打开浏览器，看自己写出来的页面到底是什么样。**
 
 ## 不同项目需要不同的验证组合
 
@@ -752,6 +818,7 @@ Cross-browser
 Component Test
 Integration Test
 关键流程 E2E
+Browser Automation
 ```
 
 核心交易系统可能更关注：
@@ -828,6 +895,14 @@ Review 经常重复检查同一类问题
 增加 Agent Hook
 ```
 
+如果某个问题需要通过真实页面才能发现：
+
+```text
+Browser Automation 发现布局问题
+        ↓
+沉淀为 Visual Regression
+```
+
 于是整个质量体系开始形成反馈闭环：
 
 ```text
@@ -861,7 +936,9 @@ Automated Tests
         ↓
 Independent Review
         ↓
-Browser / E2E / Visual Verification
+Browser Automation
+        ↓
+E2E / Visual / Integration Verification
         ↓
 CI / Merge Gate
         ↓
@@ -890,8 +967,11 @@ Test
 Review
 寻找已有规则和测试没有发现的问题
 
-Browser
-验证真实前端体验
+Browser Automation
+让 Agent 直接观察和操作真实页面
+
+CI
+把这些检查变成真正的质量门禁
 ```
 
 这几种机制不是相互替代，而是共同构成 AI Coding 下新的质量闭环。
@@ -925,7 +1005,8 @@ AI Coding 真正增加的，是：
 * Skills，把成熟质量流程固化下来
 * Agent Hooks，让必要检查自动发生
 * Independent Review，引入独立审查
-* Agent-driven Test / Browser Verification，让 Agent 主动利用反馈修正结果
+* Agent-driven Test，让 Agent 主动执行验证
+* Browser Automation，让 Agent 可以直接操作页面、观察结果并继续修复
 
 所以，一个更现实的目标并不是：
 
